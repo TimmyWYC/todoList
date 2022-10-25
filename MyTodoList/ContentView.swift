@@ -1,21 +1,68 @@
 //
 //  ContentView.swift
-//  MyTodoList
+//  TodoList
 //
 //  Created by Timmy Wong on 2022-10-25.
 //
 
 import SwiftUI
 
+struct TaskObject: Hashable{
+    let title: String
+    var isDone = false
+    var isImportant = false
+}
+
 struct ContentView: View {
+    @State private var inputText = ""
+    @State private var todoList: [TaskObject] = [TaskObject(title: "Code")]
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hello, world!")
+        NavigationStack {
+            HStack{
+                HStack{
+                    Image(systemName: "star")
+                    Text("Important")
+                }
+                HStack{
+                    Image(systemName: "circle")
+                    Text("All")
+                }
+            }
+            List{
+                ForEach(todoList, id: \.self){object in
+                    HStack{
+                        HStack{
+                            Image(systemName: object.isDone ? "checkmark.square" :"square")
+                            Text(object.title)
+                        }
+                        .onTapGesture {
+                            if let index  = todoList.firstIndex(of: object){
+                                todoList[index].isDone.toggle()
+                            }
+                        }
+                        Spacer()
+                        Image(systemName: object.isImportant ? "star.fill" :"circle")
+                            .onTapGesture {
+                                if let index  = todoList.firstIndex(of: object){
+                                    todoList[index].isImportant.toggle()
+                                }
+                            }
+                    }
+                }
+                .onDelete{indexSet in
+                    indexSet.forEach{index in
+                        todoList.remove(at: index)
+                    }
+                }
+                TextField("Add task", text: $inputText)
+                    .onSubmit{
+                        todoList.append(TaskObject(title: inputText))
+                        inputText = ""
+                    }
+            }
+            .navigationTitle("Todo List")
         }
-        .padding()
     }
 }
 
