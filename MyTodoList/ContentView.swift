@@ -13,41 +13,68 @@ struct TaskObject: Hashable{
     var isImportant = false
 }
 
-struct ContentView: View {
+
+
+struct ContentView: View{
     @State private var inputText = ""
     @State private var todoList: [TaskObject] = [TaskObject(title: "Code")]
-    
-    var body: some View {
-        NavigationStack {
+    @State private var categoryImportant = false
+
+    var body: some View{
+        NavigationStack{
             HStack{
                 HStack{
-                    Image(systemName: "star")
+                    Image(systemName: categoryImportant ? "star.fill" : "star" )
+                        .onTapGesture {
+                            categoryImportant.toggle()
+                            }
                     Text("Important")
                 }
                 HStack{
-                    Image(systemName: "circle")
+                    Image(systemName: categoryImportant ? "circle" : "circle.fill")
                     Text("All")
                 }
             }
             List{
                 ForEach(todoList, id: \.self){object in
-                    HStack{
+                    if(!categoryImportant){
                         HStack{
-                            Image(systemName: object.isDone ? "checkmark.square" :"square")
-                            Text(object.title)
-                        }
-                        .onTapGesture {
-                            if let index  = todoList.firstIndex(of: object){
-                                todoList[index].isDone.toggle()
+                            HStack{
+                                Image(systemName: object.isDone ? "checkmark.square" :"square")
+                                Text(object.title)
                             }
-                        }
-                        Spacer()
-                        Image(systemName: object.isImportant ? "star.fill" :"circle")
                             .onTapGesture {
                                 if let index  = todoList.firstIndex(of: object){
-                                    todoList[index].isImportant.toggle()
+                                    todoList[index].isDone.toggle()
                                 }
                             }
+                            Spacer()
+                            Image(systemName: object.isImportant ? "star.fill" :"circle")
+                                .onTapGesture{
+                                    if let index  = todoList.firstIndex(of: object){
+                                        todoList[index].isImportant.toggle()
+                                    }
+                                }
+                        }
+                    }else if (object.isImportant){
+                        HStack{
+                            HStack{
+                                Image(systemName: object.isDone ? "checkmark.square" :"square")
+                                Text(object.title)
+                            }
+                            .onTapGesture {
+                                if let index  = todoList.firstIndex(of: object){
+                                    todoList[index].isDone.toggle()
+                                }
+                            }
+                            Spacer()
+                            Image(systemName: object.isImportant ? "star.fill" :"circle")
+                                .onTapGesture{
+                                    if let index  = todoList.firstIndex(of: object){
+                                        todoList[index].isImportant.toggle()
+                                    }
+                                }
+                        }
                     }
                 }
                 .onDelete{indexSet in
@@ -66,8 +93,8 @@ struct ContentView: View {
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
+struct ContentView_Previews: PreviewProvider{
+    static var previews: some View{
         ContentView()
     }
 }
