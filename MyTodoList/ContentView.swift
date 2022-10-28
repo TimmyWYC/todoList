@@ -11,67 +11,84 @@ struct TaskObject: Hashable{
     let title: String
     var isDone = false
     var isImportant = false
+    var isNotImportant = false
 }
 
 
 
 struct ContentView: View{
     @State private var inputText = ""
-    @State private var todoList: [TaskObject] = [TaskObject(title: "Code")]
+    @State private var todoList: [TaskObject] = [TaskObject(title: "Task 1"), TaskObject(title: "Task 2"), TaskObject(title: "Task 3")]
     @State private var categoryImportant = false
-
-    var body: some View{
-        NavigationStack{
-            HStack{
-                HStack{
+    @State private var categoryNotImportant = false
+    
+    @State private var filterList: [TaskObject] = []
+    
+    var body: some View {
+        NavigationStack {
+            HStack {
+                HStack {
                     Image(systemName: categoryImportant ? "star.fill" : "star" )
-                        .onTapGesture {
-                            categoryImportant.toggle()
-                            }
                     Text("Important")
+                        .onTapGesture {
+                            categoryNotImportant = false
+                            categoryImportant.toggle()
+                                filterList = todoList.filter({ element in
+                                    element.isImportant
+                                })
+                        }
                 }
-                HStack{
-                    Image(systemName: categoryImportant ? "circle" : "circle.fill")
+                HStack {
+                    Image(systemName: categoryNotImportant ? "moon.fill" : "moon")
+                    Text("Not Important")
+                        .onTapGesture {
+                            categoryImportant = false
+                            categoryNotImportant.toggle()
+                                filterList = todoList.filter({ element in
+                                    element.isNotImportant
+                                })
+                            
+                        }
+                }
+                HStack {
+                    Image(systemName: categoryImportant || categoryNotImportant ? "circle" : "circle.fill")
                     Text("All")
+                        .onTapGesture {
+                            categoryImportant = false
+                            categoryNotImportant = false
+                            filterList = todoList.filter({ element in
+                                true
+                            })
+                        }
                 }
             }
-            List{
+            List {
                 ForEach(todoList, id: \.self){object in
-                    if(!categoryImportant){
-                        HStack{
-                            HStack{
-                                Image(systemName: object.isDone ? "checkmark.square" :"square")
-                                Text(object.title)
+                    HStack {
+                        HStack {
+                            Image(systemName: object.isDone ? "checkmark.square" :"square")
+                            Text(object.title)
+                        }
+                        .onTapGesture {
+                            if let index  = todoList.firstIndex(of: object) {
+                                todoList[index].isDone.toggle()
                             }
-                            .onTapGesture {
-                                if let index  = todoList.firstIndex(of: object){
-                                    todoList[index].isDone.toggle()
-                                }
-                            }
-                            Spacer()
-                            Image(systemName: object.isImportant ? "star.fill" :"circle")
-                                .onTapGesture{
-                                    if let index  = todoList.firstIndex(of: object){
+                        }
+                        Spacer()
+                        HStack {
+                            Image(systemName: object.isImportant ? "star.fill" :"star")
+                                .onTapGesture {
+                                    if let index  = todoList.firstIndex(of: object) {
                                         todoList[index].isImportant.toggle()
-                                    }
+                                        todoList[index].isNotImportant = false                                    }
                                 }
                         }
-                    }else if (object.isImportant){
-                        HStack{
-                            HStack{
-                                Image(systemName: object.isDone ? "checkmark.square" :"square")
-                                Text(object.title)
-                            }
-                            .onTapGesture {
-                                if let index  = todoList.firstIndex(of: object){
-                                    todoList[index].isDone.toggle()
-                                }
-                            }
-                            Spacer()
-                            Image(systemName: object.isImportant ? "star.fill" :"circle")
-                                .onTapGesture{
-                                    if let index  = todoList.firstIndex(of: object){
-                                        todoList[index].isImportant.toggle()
+                        HStack {
+                            Image(systemName: object.isNotImportant ? "moon.fill" :"moon")
+                                .onTapGesture {
+                                    if let index  = todoList.firstIndex(of: object) {
+                                        todoList[index].isNotImportant.toggle()
+                                        todoList[index].isImportant = false
                                     }
                                 }
                         }
@@ -93,8 +110,8 @@ struct ContentView: View{
     }
 }
 
-struct ContentView_Previews: PreviewProvider{
-    static var previews: some View{
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
         ContentView()
     }
 }
