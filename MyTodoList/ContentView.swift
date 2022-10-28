@@ -23,7 +23,9 @@ struct ContentView: View{
     @State private var categoryNotImportant = false
     
     @State private var filterList: [TaskObject] = []
-    
+    @State private var start = true
+
+        
     var body: some View {
         NavigationStack {
             HStack {
@@ -33,6 +35,7 @@ struct ContentView: View{
                         .onTapGesture {
                             categoryNotImportant = false
                             categoryImportant.toggle()
+                            start = false
                                 filterList = todoList.filter({ element in
                                     element.isImportant
                                 })
@@ -44,6 +47,7 @@ struct ContentView: View{
                         .onTapGesture {
                             categoryImportant = false
                             categoryNotImportant.toggle()
+                            start = false
                                 filterList = todoList.filter({ element in
                                     element.isNotImportant
                                 })
@@ -56,6 +60,7 @@ struct ContentView: View{
                         .onTapGesture {
                             categoryImportant = false
                             categoryNotImportant = false
+                            start = false
                             filterList = todoList.filter({ element in
                                 true
                             })
@@ -63,7 +68,7 @@ struct ContentView: View{
                 }
             }
             List {
-                ForEach(filterList, id: \.self){object in
+                ForEach(start ? todoList : filterList, id: \.self){object in
                     HStack {
                         HStack {
                             Image(systemName: object.isDone ? "checkmark.square" :"square")
@@ -134,7 +139,23 @@ struct ContentView: View{
                     .onSubmit{
                         todoList.append(TaskObject(title: inputText))
                         inputText = ""
+                        if categoryImportant{
+                            filterList = todoList.filter({ element in
+                                element.isImportant
+                            })
+                        }
+                        else if categoryNotImportant{
+                            filterList = todoList.filter({ element in
+                                element.isNotImportant
+                            })
+                        }
+                        else{
+                            filterList = todoList.filter({ element in
+                                true
+                            })
+                        }
                     }
+                
             }
             .navigationTitle("Todo List")
         }
