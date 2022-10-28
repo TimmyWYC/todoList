@@ -63,7 +63,7 @@ struct ContentView: View{
                 }
             }
             List {
-                ForEach(todoList, id: \.self){object in
+                ForEach(filterList, id: \.self){object in
                     HStack {
                         HStack {
                             Image(systemName: object.isDone ? "checkmark.square" :"square")
@@ -80,7 +80,23 @@ struct ContentView: View{
                                 .onTapGesture {
                                     if let index  = todoList.firstIndex(of: object) {
                                         todoList[index].isImportant.toggle()
-                                        todoList[index].isNotImportant = false                                    }
+                                        todoList[index].isNotImportant = false
+                                        if categoryImportant{
+                                            filterList = todoList.filter({ element in
+                                                element.isImportant
+                                            })
+                                        }
+                                        else if categoryNotImportant{
+                                            filterList = todoList.filter({ element in
+                                                element.isNotImportant
+                                            })
+                                        }
+                                        else{
+                                            filterList = todoList.filter({ element in
+                                                true
+                                            })
+                                        }
+                                    }
                                 }
                         }
                         HStack {
@@ -89,6 +105,21 @@ struct ContentView: View{
                                     if let index  = todoList.firstIndex(of: object) {
                                         todoList[index].isNotImportant.toggle()
                                         todoList[index].isImportant = false
+                                        if categoryImportant{
+                                            filterList = todoList.filter({ element in
+                                                element.isImportant
+                                            })
+                                        }
+                                        else if categoryNotImportant{
+                                            filterList = todoList.filter({ element in
+                                                element.isNotImportant
+                                            })
+                                        }
+                                        else{
+                                            filterList = todoList.filter({ element in
+                                                true
+                                            })
+                                        }
                                     }
                                 }
                         }
