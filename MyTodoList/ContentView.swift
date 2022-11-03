@@ -25,7 +25,26 @@ struct ContentView: View{
     @State private var filterList: [TaskObject] = []
     @State private var start = true
 
+    
         
+    fileprivate func updateFilter() {
+        if categoryImportant{
+            filterList = todoList.filter({ element in
+                element.isImportant
+            })
+        }
+        else if categoryNotImportant{
+            filterList = todoList.filter({ element in
+                element.isNotImportant
+            })
+        }
+        else{
+            filterList = todoList.filter({ element in
+                true
+            })
+        }
+    }
+    
     var body: some View {
         NavigationStack {
             HStack {
@@ -36,9 +55,7 @@ struct ContentView: View{
                             categoryNotImportant = false
                             categoryImportant.toggle()
                             start = false
-                                filterList = todoList.filter({ element in
-                                    element.isImportant
-                                })
+                            updateFilter()
                         }
                 }
                 HStack {
@@ -48,9 +65,7 @@ struct ContentView: View{
                             categoryImportant = false
                             categoryNotImportant.toggle()
                             start = false
-                                filterList = todoList.filter({ element in
-                                    element.isNotImportant
-                                })
+                            updateFilter()
                             
                         }
                 }
@@ -61,9 +76,7 @@ struct ContentView: View{
                             categoryImportant = false
                             categoryNotImportant = false
                             start = false
-                            filterList = todoList.filter({ element in
-                                true
-                            })
+                            updateFilter()
                         }
                 }
             }
@@ -78,21 +91,7 @@ struct ContentView: View{
                             if let index  = todoList.firstIndex(of: object) {
                                 todoList[index].isDone.toggle()
                             }
-                            if categoryImportant{
-                                filterList = todoList.filter({ element in
-                                    element.isImportant
-                                })
-                            }
-                            else if categoryNotImportant{
-                                filterList = todoList.filter({ element in
-                                    element.isNotImportant
-                                })
-                            }
-                            else{
-                                filterList = todoList.filter({ element in
-                                    true
-                                })
-                            }
+                            updateFilter()
                         }
                         Spacer()
                         HStack {
@@ -101,21 +100,7 @@ struct ContentView: View{
                                     if let index  = todoList.firstIndex(of: object) {
                                         todoList[index].isImportant.toggle()
                                         todoList[index].isNotImportant = false
-                                        if categoryImportant{
-                                            filterList = todoList.filter({ element in
-                                                element.isImportant
-                                            })
-                                        }
-                                        else if categoryNotImportant{
-                                            filterList = todoList.filter({ element in
-                                                element.isNotImportant
-                                            })
-                                        }
-                                        else{
-                                            filterList = todoList.filter({ element in
-                                                true
-                                            })
-                                        }
+                                        updateFilter()
                                     }
                                 }
                         }
@@ -125,21 +110,7 @@ struct ContentView: View{
                                     if let index  = todoList.firstIndex(of: object) {
                                         todoList[index].isNotImportant.toggle()
                                         todoList[index].isImportant = false
-                                        if categoryImportant{
-                                            filterList = todoList.filter({ element in
-                                                element.isImportant
-                                            })
-                                        }
-                                        else if categoryNotImportant{
-                                            filterList = todoList.filter({ element in
-                                                element.isNotImportant
-                                            })
-                                        }
-                                        else{
-                                            filterList = todoList.filter({ element in
-                                                true
-                                            })
-                                        }   
+                                        updateFilter()
                                     }
                                 }
                         }
@@ -148,27 +119,14 @@ struct ContentView: View{
                 .onDelete{indexSet in
                     indexSet.forEach{index in
                         todoList.remove(at: index)
+                        updateFilter()
                     }
                 }
                 TextField("Add task", text: $inputText)
                     .onSubmit{
                         todoList.append(TaskObject(title: inputText))
                         inputText = ""
-                        if categoryImportant{
-                            filterList = todoList.filter({ element in
-                                element.isImportant
-                            })
-                        }
-                        else if categoryNotImportant{
-                            filterList = todoList.filter({ element in
-                                element.isNotImportant
-                            })
-                        }
-                        else{
-                            filterList = todoList.filter({ element in
-                                true
-                            })
-                        }
+                        updateFilter()
                     }
                 
             }
