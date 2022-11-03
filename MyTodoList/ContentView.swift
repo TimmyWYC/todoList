@@ -78,6 +78,21 @@ struct ContentView: View{
                             if let index  = todoList.firstIndex(of: object) {
                                 todoList[index].isDone.toggle()
                             }
+                            if categoryImportant{
+                                filterList = todoList.filter({ element in
+                                    element.isImportant
+                                })
+                            }
+                            else if categoryNotImportant{
+                                filterList = todoList.filter({ element in
+                                    element.isNotImportant
+                                })
+                            }
+                            else{
+                                filterList = todoList.filter({ element in
+                                    true
+                                })
+                            }
                         }
                         Spacer()
                         HStack {
@@ -124,7 +139,7 @@ struct ContentView: View{
                                             filterList = todoList.filter({ element in
                                                 true
                                             })
-                                        }
+                                        }   
                                     }
                                 }
                         }
