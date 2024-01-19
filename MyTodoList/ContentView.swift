@@ -19,6 +19,7 @@ struct TaskObject: Hashable{
 struct ContentView: View{
     @State private var inputText = ""
     @State private var todoList: [TaskObject] = [TaskObject(title: "Task 1"), TaskObject(title: "Task 2"), TaskObject(title: "Task 3")]
+    
     @State private var categoryImportant = false
     @State private var categoryNotImportant = false
     
@@ -66,7 +67,7 @@ struct ContentView: View{
                             categoryNotImportant.toggle()
                             start = false
                             updateFilter()
-                            
+                        
                         }
                 }
                 HStack {
@@ -128,7 +129,7 @@ struct ContentView: View{
                         inputText = ""
                         updateFilter()
                     }
-                
+            
             }
             .navigationTitle("Todo List")
         }
