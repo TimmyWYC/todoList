@@ -52,33 +52,34 @@ struct ContentView: View{
                 HStack {
                     Image(systemName: categoryImportant ? "star.fill" : "star" )
                     Text("Important")
-                        .onTapGesture {
-                            categoryNotImportant = false
-                            categoryImportant.toggle()
-                            start = false
-                            updateFilter()
-                        }
+                }
+                .onTapGesture {
+                    categoryNotImportant = false
+                    categoryImportant.toggle()
+                    start = false
+                    updateFilter()
                 }
                 HStack {
                     Image(systemName: categoryNotImportant ? "moon.fill" : "moon")
                     Text("Not Important")
-                        .onTapGesture {
-                            categoryImportant = false
-                            categoryNotImportant.toggle()
-                            start = false
-                            updateFilter()
-                        
-                        }
+                                                
+                }
+                .onTapGesture {
+                    categoryImportant = false
+                    categoryNotImportant.toggle()
+                    start = false
+                    updateFilter()
                 }
                 HStack {
                     Image(systemName: categoryImportant || categoryNotImportant ? "circle" : "circle.fill")
                     Text("All")
-                        .onTapGesture {
-                            categoryImportant = false
-                            categoryNotImportant = false
-                            start = false
-                            updateFilter()
-                        }
+                        
+                }
+                .onTapGesture {
+                    categoryImportant = false
+                    categoryNotImportant = false
+                    start = false
+                    updateFilter()
                 }
             }
             List {
